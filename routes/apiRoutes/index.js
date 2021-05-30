@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const notes = require("../../db/db");
 
-const { validateNote, createNewNote } = require("../../lib/notes");
+const { validateNote, createNewNote, findById, deleteNoteById } = require("../../lib/notes");
 
 //get note
 router.get("/notes", (req, res) => {
@@ -10,8 +10,6 @@ router.get("/notes", (req, res) => {
 
 //save note
 router.post("/notes", (req, res) => {
-    // set id based on what the next index of the array will be
-    req.body.id = notes.length.toString();
 
     // if any data in req.body is incorrect, send 400 error back
     if (!validateNote(req.body)) {
@@ -24,7 +22,8 @@ router.post("/notes", (req, res) => {
 });
 
 //delete note
-router.delete("/notes", (req, res) => {
+router.delete("/notes/:id", (req, res) => {
+    deleteNoteById(parseInt(req.params.id), notes);
     res.status(202).send();
 });
 
